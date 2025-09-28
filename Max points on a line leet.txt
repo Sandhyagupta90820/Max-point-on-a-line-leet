@@ -1,0 +1,31 @@
+from collections import defaultdict
+from fractions import gcd
+
+class Solution:
+    def maxPoints(self, points):
+        n = len(points)
+        if n <= 2:
+            return n
+
+        res = 0
+        for i in range(n):
+            slope_count = defaultdict(int)
+            duplicates = 1
+            cur_max = 0
+            x1, y1 = points[i]
+
+            for j in range(i + 1, n):
+                x2, y2 = points[j]
+                dx, dy = x2 - x1, y2 - y1
+                if dx == 0 and dy == 0:
+                    duplicates += 1
+                    continue
+                g = gcd(dx, dy)
+                dx //= g
+                dy //= g
+                slope_count[(dx, dy)] += 1
+                cur_max = max(cur_max, slope_count[(dx, dy)])
+
+            res = max(res, cur_max + duplicates)
+
+        return res
